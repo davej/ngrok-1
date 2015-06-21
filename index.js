@@ -26,7 +26,7 @@ function connect(opts, cb) {
 	}
 
 	var tunnelUrl;
-	var ngrok = spawn('./' + getNgrokBin(), getNgrokArgs(opts), {cwd: __dirname + '/bin'});
+	var ngrok = spawn('./' + getNgrokBin(), getNgrokArgs(opts), {cwd: __dirname + '/../../system/osx/bin'});
 
 	ngrok.stdout.on('data', function (data) {
 		var urlOk = data.toString().match(TUNNEL_OK);
@@ -86,7 +86,7 @@ function getNgrokBin () {
 }
 
 function getNgrokArgs(opts) {
-	var args = ['-log=stdout'];
+	var args = ['-log=stdout', '-config=../../../ngrok.yml'];
 	opts.authtoken && args.push('-authtoken', opts.authtoken);
 	opts.subdomain && args.push('-subdomain', opts.subdomain);
 	opts.httpauth && args.push('-httpauth', opts.httpauth);
@@ -109,7 +109,7 @@ function disconnect(tunnelUrl, callback) {
 		kill(url, next);
 	});
 	process.nextTick(next);
-	
+
 	function next() {
 		if (--pending === 0) callback && callback();
 	}
@@ -122,7 +122,7 @@ function kill(tunnelUrl, callback) {
 		return callback && process.nextTick(callback);
 	}
 	ngrok.once('exit', function() {
-		emitter.emit('disconnect');  
+		emitter.emit('disconnect');
 		return callback && callback();
 	});
 	return ngrok.kill();
