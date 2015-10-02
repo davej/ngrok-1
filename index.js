@@ -8,6 +8,8 @@ var exports = {};
 
 var TUNNEL_OK = /\[INFO\] \[client\] Tunnel established at ((tcp|https)..*.pin.gy(:[0-9]+)?)/;
 var TUNNEL_BUSY = /\[EROR\] \[client\] Server failed to allocate tunnel: The tunnel ((tcp|http|https)..*.pin.gy([0-9]+)?) (.*is already registered)/;
+var TUNNEL_RETRIED = /\[INFO\] Waiting 8 seconds before reconnecting/;
+
 
 function connect(opts, cb) {
 
@@ -40,7 +42,15 @@ function connect(opts, cb) {
 		var urlBusy = data.toString().match(TUNNEL_BUSY);
 		if (urlBusy && urlBusy[1]) {
 			ngrok.kill();
-			var info = 'ngrok: The tunnel ' + urlBusy[1] + ' ' + urlBusy[4];
+			var info = 'The tunnel ' + urlBusy[1] + ' ' + urlBusy[4];
+			var err = new Error(info);
+			log(info);
+			return cb(err);
+		}
+		var urlRetried = data.toString().match(TUNNEL_RETRIED);
+		if (urlRetried) {
+			ngrok.kill();
+			var info = 'We couldn\'t connect to the Pingy server to create a tunnel, please ensure your internet connection is working correctly';
 			var err = new Error(info);
 			log(info);
 			return cb(err);
