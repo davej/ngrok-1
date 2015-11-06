@@ -132,7 +132,7 @@ function kill(tunnelUrl, callback) {
 		return callback && process.nextTick(callback);
 	}
 	ngrok.once('exit', function() {
-		emitter.emit('disconnect');
+		emitter.emit('disconnect', tunnelUrl);
 		return callback && callback();
 	});
 	return ngrok.kill();
