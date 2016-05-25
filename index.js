@@ -10,9 +10,7 @@ var TUNNEL_OK = /\[INFO\] \[client\] Tunnel established at ((tcp|https)..*.pin.g
 var TUNNEL_BUSY = /\[EROR\] \[client\] Server failed to allocate tunnel: The tunnel ((tcp|http|https)..*.pin.gy([0-9]+)?) (.*is already registered)/;
 var TUNNEL_RETRIED = /\[INFO\] Waiting 4 seconds before reconnecting/;
 
-
 function connect(opts, cb) {
-
 	cb || (cb = function(){});
 	if (typeof opts === 'number') {
 		opts = {log: false, port: opts};
@@ -29,7 +27,7 @@ function connect(opts, cb) {
 
 	var tunnelUrl;
 	var ngrokExecOpts = {};
-	opts.binPath && ngrokExecOpts.cwd = opts.binPath;
+	if (opts.binPath) ngrokExecOpts.cwd = opts.binPath;
 	var ngrok = spawn('./' + getNgrokBin(), getNgrokArgs(opts), ngrokExecOpts);
 
 	ngrok.stdout.on('data', function (data) {
