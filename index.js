@@ -6,9 +6,9 @@ var emitter = new EventEmitter();
 var tunnels = {};
 var exports = {};
 
-var TUNNEL_OK = /\[INFO\] \[client\] Tunnel established at ((tcp|https)..*.pin.gy(:[0-9]+)?)/;
-var TUNNEL_BUSY = /\[EROR\] \[client\] Server failed to allocate tunnel: The tunnel ((tcp|http|https)..*.pin.gy([0-9]+)?) (.*is already registered)/;
-var TUNNEL_RETRIED = /\[INFO\] Waiting 4 seconds before reconnecting/;
+var TUNNEL_OK = /\[INFO\] .+ \[client\] Tunnel established at ((tcp|https)..*.pin.gy(:[0-9]+)?)/;
+var TUNNEL_BUSY = /\[EROR\] .+ \[client\] Server failed to allocate tunnel: The tunnel ((tcp|http|https)..*.pin.gy([0-9]+)?) (.*is already registered)/;
+var TUNNEL_RETRIED = /\[INFO\] .+ Waiting 4 seconds before reconnecting/;
 
 function connect(opts, cb) {
 	cb || (cb = function(){});
